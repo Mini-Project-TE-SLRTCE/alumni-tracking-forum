@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
-import { logoutUser } from '../reducers/userReducer';
-import { notify } from '../reducers/notificationReducer';
-import MobileUserMenu from './MobileUserMenu';
-import DesktopUserMenu from './DesktopUserMenu';
-import SearchBar from './SearchBar';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
+import { logoutUser } from "../reducers/userReducer";
+import { notify } from "../reducers/notificationReducer";
+import MobileUserMenu from "./MobileUserMenu";
+import DesktopUserMenu from "./DesktopUserMenu";
+import SearchBar from "./SearchBar";
 
 import {
   AppBar,
@@ -15,24 +15,24 @@ import {
   Button,
   useMediaQuery,
   IconButton,
-} from '@material-ui/core';
-import { useNavStyles } from '../styles/muiStyles';
-import { useTheme } from '@material-ui/core/styles';
-import RedditIcon from '@material-ui/icons/Reddit';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import SearchIcon from '@material-ui/icons/Search';
+} from "@material-ui/core";
+import { useNavStyles } from "../styles/muiStyles";
+import { useTheme } from "@material-ui/core/styles";
+import SchoolIcon from "@material-ui/icons/School";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import SearchIcon from "@material-ui/icons/Search";
 
 const NavBar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const classes = useNavStyles();
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    dispatch(notify(`u/${user.username} logged out`, 'success'));
+    dispatch(notify(`u/${user.username} logged out`, "success"));
   };
 
   return (
@@ -47,12 +47,12 @@ const NavBar = () => {
                   color="primary"
                   component={RouterLink}
                   to="/"
-                  startIcon={<RedditIcon fontSize="large" />}
+                  startIcon={<SchoolIcon fontSize="large" />}
                   size="large"
                 >
-                  reddish
+                  alumni tracking system
                 </Button>
-                <Typography variant="caption" color="secondary">
+                {/* <Typography variant="caption" color="secondary">
                   Made with <FavoriteIcon style={{ fontSize: 12 }} /> by
                   <Link
                     href={'https://github.com/amand33p'}
@@ -62,7 +62,7 @@ const NavBar = () => {
                   >
                     <strong>{` amand33p`}</strong>
                   </Link>
-                </Typography>
+                </Typography> */}
               </div>
               {!isMobile && <SearchBar />}
             </div>
