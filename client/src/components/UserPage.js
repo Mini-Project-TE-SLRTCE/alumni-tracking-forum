@@ -70,6 +70,9 @@ const UserPage = () => {
 
   const {
     avatar,
+    name,
+    email,
+    phonenumber,
     username: userName,
     createdAt,
     posts,
@@ -107,8 +110,12 @@ const UserPage = () => {
                 <h1>{userName[0]}</h1>
               </Avatar>
             )}
+
             <Typography variant="h6" color="secondary">
               u/{userName}
+            </Typography>
+            <Typography variant="subtitle1">
+              Hello, {name}
             </Typography>
           </div>
           <div className={classes.rightWrapper}>
