@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { loginUser, signupUser } from '../reducers/userReducer';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
+import "yup-phone";
+
 import { TextInput } from './FormikMuiFields';
 import { notify } from '../reducers/notificationReducer';
 import AlertMessage from './AlertMessage';
@@ -36,11 +38,20 @@ const validationSchemaSignup = yup.object({
       /^[a-zA-Z0-9-_]*$/,
       'Only alphanumeric characters allowed, no spaces/symbols'
     ),
-
+  name: yup
+    .string()
+    .required('Required'),
   password: yup
     .string()
     .required('Required')
     .min(6, 'Must be at least 6 characters'),
+  email: yup
+    .string()
+    .email('Invalid email')
+    .required('Required'),
+  phonenumber: yup
+    .string()
+    .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Invalid phone number")
 });
 
 const validationSchemaLogin = yup.object({
@@ -130,17 +141,6 @@ const AuthForm = () => {
                           type="text"
                           placeholder="Enter name"
                           label="Name"
-                          required
-                          fullWidth
-                        />
-                      </div>
-                      <div className={classes.input}>
-                        <AlternateEmailIcon className={classes.inputIcon} color="primary" />
-                        <TextInput
-                          name="email"
-                          type="email"
-                          placeholder="Enter email"
-                          label="Email"
                           required
                           fullWidth
                         />
