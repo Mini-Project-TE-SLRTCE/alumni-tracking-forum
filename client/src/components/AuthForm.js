@@ -22,6 +22,9 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
+import FaceIcon from '@material-ui/icons/Face';
+import CallIcon from '@material-ui/icons/Call';
 
 const validationSchemaSignup = yup.object({
   username: yup
@@ -117,6 +120,56 @@ const AuthForm = () => {
                     fullWidth
                   />
                 </div>
+                {
+                  authType === 'signup' ? (
+                    <>
+                      <div className={classes.input}>
+                        <FaceIcon className={classes.inputIcon} color="primary" />
+                        <TextInput
+                          name="name"
+                          type="text"
+                          placeholder="Enter name"
+                          label="Name"
+                          required
+                          fullWidth
+                        />
+                      </div>
+                      <div className={classes.input}>
+                        <AlternateEmailIcon className={classes.inputIcon} color="primary" />
+                        <TextInput
+                          name="email"
+                          type="email"
+                          placeholder="Enter email"
+                          label="Email"
+                          required
+                          fullWidth
+                        />
+                      </div>
+                      <div className={classes.input}>
+                        <AlternateEmailIcon className={classes.inputIcon} color="primary" />
+                        <TextInput
+                          name="email"
+                          type="email"
+                          placeholder="Enter email"
+                          label="Email"
+                          required
+                          fullWidth
+                        />
+                      </div>
+                      <div className={classes.input}>
+                        <CallIcon className={classes.inputIcon} color="primary" />
+                        <TextInput
+                          name="phonenumber"
+                          type="tel"
+                          placeholder="Enter phone number"
+                          label="Phone number"
+                          required
+                          fullWidth
+                        />
+                      </div>
+                    </>
+                  ) : ''
+                }
                 <div className={classes.input}>
                   <LockIcon className={classes.inputIcon} color="primary" />
                   <TextInput
@@ -161,8 +214,8 @@ const AuthForm = () => {
                       ? 'Logging In'
                       : 'Login'
                     : isSubmitting
-                    ? 'Signing Up'
-                    : 'Sign Up'}
+                      ? 'Signing Up'
+                      : 'Sign Up'}
                 </Button>
               </Form>
               <Divider

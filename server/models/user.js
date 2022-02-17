@@ -3,6 +3,15 @@ const uniqueValidator = require('mongoose-unique-validator');
 const schemaCleaner = require('../utils/schemaCleaner');
 const { commentSchema } = require('./post');
 
+/*
+TODO: 
+* add fields to user
+- name
+- mobile number
+- email
+*/
+
+
 const userSchema = new mongoose.Schema(
   {
     username: {
