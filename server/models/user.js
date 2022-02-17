@@ -9,6 +9,8 @@ TODO:
 - name
 - mobile number
 - email
+- college [enum]
+- 
 */
 
 
@@ -17,9 +19,30 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       minlength: 3,
+      unique: true,
       maxlength: 20,
       required: true,
       trim: true,
+    },
+    name: {
+      type: String,
+      minlength: 1,
+      maxlength: 100,
+      required: true,
+      trim: true
+    },
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      unique: true,
+      required: 'Email address is required',
+      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+    },
+    phonenumber: {
+      type: String,
+      minlength: 10,
+      trim: true
     },
     passwordHash: {
       type: String,

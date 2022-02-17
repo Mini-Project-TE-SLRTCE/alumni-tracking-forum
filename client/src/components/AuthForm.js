@@ -52,6 +52,7 @@ const validationSchemaSignup = yup.object({
   phonenumber: yup
     .string()
     .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Invalid phone number")
+  // TODO: fix phone validation
 });
 
 const validationSchemaLogin = yup.object({
@@ -85,7 +86,7 @@ const AuthForm = () => {
       await dispatch(signupUser(values));
       dispatch(
         notify(
-          `Welcome, ${values.username}. You've been successfully registered.`,
+          `Welcome, ${values.name}. You've been successfully registered.`,
           'success'
         )
       );

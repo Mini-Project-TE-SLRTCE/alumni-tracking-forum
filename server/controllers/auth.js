@@ -38,7 +38,8 @@ const loginUser = async (req, res) => {
 };
 
 const signupUser = async (req, res) => {
-  const { username, password } = req.body;
+  console.log(req.body);
+  const { username, password, name, email, phonenumber } = req.body;
 
   if (!password || password.length < 6) {
     return res
@@ -68,6 +69,9 @@ const signupUser = async (req, res) => {
   const user = new User({
     username,
     passwordHash,
+    name,
+    email,
+    phonenumber
   });
 
   const savedUser = await user.save();
