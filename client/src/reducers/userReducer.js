@@ -12,6 +12,8 @@ const userReducer = (state = null, action) => {
       return null;
     case 'SET_USER':
       return action.payload;
+    case 'UPDATE_USER':
+      return action.payload;
     case 'SET_AVATAR':
       return { ...state, ...action.payload };
     case 'REMOVE_AVATAR':
@@ -70,6 +72,17 @@ export const setUser = () => {
         payload: loggedUser,
       });
     }
+  };
+};
+
+export const updateUser = (details) => {
+  return async (dispatch) => {
+    const updateUser = await userService.updateUser({ details });
+
+    dispatch({
+      type: 'UPDATE_USER',
+      payload: updateUser,
+    });
   };
 };
 

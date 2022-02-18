@@ -17,6 +17,15 @@ const getUser = async (username, limit, page) => {
   return response.data;
 };
 
+const updateUser = async (details) => {
+  const response = await axios.put(
+    `${baseUrl}/${details.username}`,
+    details,
+    setConfig()
+  );
+  return response.data;
+};
+
 const uploadAvatar = async (avatarObj) => {
   const response = await axios.post(
     `${baseUrl}/avatar`,
@@ -31,6 +40,6 @@ const removeAvatar = async () => {
   return response.data;
 };
 
-const userService = { getUser, uploadAvatar, removeAvatar };
+const userService = { getUser, updateUser, uploadAvatar, removeAvatar };
 
 export default userService;

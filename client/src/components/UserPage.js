@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser, loadUserPosts } from '../reducers/userPageReducer';
 import { notify } from '../reducers/notificationReducer';
 import { getCircularAvatar } from '../utils/cloudinaryTransform';
+// import UpdateUser from './UpdateUser';
 import UserPostCard from './UserPostCard';
 import ErrorPage from './ErrorPage';
 import LoadMoreButton from './LoadMoreButton';
@@ -74,6 +75,9 @@ const UserPage = () => {
     email,
     phonenumber,
     username: userName,
+    bathc,
+    branch,
+    role,
     createdAt,
     posts,
     totalComments,
@@ -94,7 +98,7 @@ const UserPage = () => {
   return (
     <Container disableGutters>
       <Paper variant="outlined" className={classes.mainPaper}>
-        <Paper className={classes.userInfoWrapper} variant="outlined">
+        <Paper className={classes.userInfoWrapper} elevation={0}>
           <div className={classes.avatarWrapper}>
             {avatar && avatar.exists ? (
               <Avatar
@@ -118,12 +122,14 @@ const UserPage = () => {
               Hello, {name}
             </Typography>
           </div>
+
           <div className={classes.rightWrapper}>
             <div className={classes.itemWrapper}>
               <div className={classes.twoItemsDiv}>
                 <Typography variant="body1" color="secondary">
                   Cake Day
                 </Typography>
+
                 <Typography
                   variant="h6"
                   color="secondary"
@@ -133,28 +139,34 @@ const UserPage = () => {
                   {String(new Date(createdAt)).split(' ').slice(1, 4).join(' ')}
                 </Typography>
               </div>
+
               <div className={classes.twoItemsDiv}>
                 <Typography variant="body1" color="secondary">
                   <strong>{posts.length}</strong> Posts
                 </Typography>
+
                 <Typography variant="body1" color="secondary">
                   <strong>{totalComments}</strong> Comments
                 </Typography>
               </div>
             </div>
+
             <div className={classes.itemWrapper}>
               <div className={classes.twoItemsDiv}>
                 <Typography variant="body1" color="secondary">
                   Karma
                 </Typography>
+
                 <Typography variant="h6" color="secondary">
                   {karmaPoints.commentKarma + karmaPoints.postKarma}
                 </Typography>
               </div>
+
               <div className={classes.twoItemsDiv}>
                 <Typography variant="body1" color="secondary">
                   Post Karma <strong>{karmaPoints.postKarma}</strong>
                 </Typography>
+
                 <Typography variant="body1" color="secondary">
                   Comment Karma <strong>{karmaPoints.commentKarma}</strong>
                 </Typography>
@@ -162,6 +174,25 @@ const UserPage = () => {
             </div>
           </div>
         </Paper>
+
+        <Paper className={classes.userInfoWrapper} elevation={0}>
+          <div style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
+            <div>Hello</div>
+            <div>Hello</div>
+            <div>Hello</div>
+          </div>
+          <div style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
+            <div>Hello</div>
+            <div>Hello</div>
+            <div>Hello</div>
+          </div>
+          <div style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
+            <div>Hello</div>
+            <div>Hello</div>
+            <div>Hello</div>
+          </div>
+        </Paper>
+
         <div className={classes.postsPaper}>
           {userInfo.posts.results.length !== 0 ? (
             userInfo.posts.results.map((p) => (
@@ -181,6 +212,7 @@ const UserPage = () => {
             </div>
           )}
         </div>
+
         {'next' in userInfo.posts && (
           <LoadMoreButton
             handleLoadPosts={handleLoadPosts}

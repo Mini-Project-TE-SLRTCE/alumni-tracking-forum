@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser, signupUser } from '../reducers/userReducer';
+import { loginUser, updateUser } from '../reducers/userReducer';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import "yup-phone";
@@ -28,7 +28,7 @@ import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import FaceIcon from '@material-ui/icons/Face';
 import CallIcon from '@material-ui/icons/Call';
 
-const validationSchemaSignup = yup.object({
+const validationSchemaUpdate = yup.object({
   username: yup
     .string()
     .required('Required')
@@ -55,35 +55,17 @@ const validationSchemaSignup = yup.object({
   // TODO: fix phone validation
 });
 
-const validationSchemaLogin = yup.object({
-  username: yup.string().required('Required'),
-  password: yup.string().required('Required'),
-});
-
-const AuthForm = () => {
+const UpdateUser = () => {
   const dispatch = useDispatch();
   const [authType, setAuthType] = useState('login');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState(null);
   const classes = useAuthStyles(authType)();
 
-  const handleLogin = async (values, { setSubmitting }) => {
+  const handleUpdate = async (values, { setSubmitting }) => {
     try {
       setSubmitting(true);
-      await dispatch(loginUser(values));
-      dispatch(
-        notify(`Welcome, ${values.username}. You're logged in!`, 'success')
-      );
-    } catch (err) {
-      setSubmitting(false);
-      setError(getErrorMsg(err));
-    }
-  };
-
-  const handleSignup = async (values, { setSubmitting }) => {
-    try {
-      setSubmitting(true);
-      await dispatch(signupUser(values));
+      await dispatch(updateUser(values));
       dispatch(
         notify(
           `Welcome, ${values.name}. You've been successfully registered.`,
@@ -102,11 +84,9 @@ const AuthForm = () => {
         <Formik
           validateOnChange={true}
           initialValues={{ username: '', password: '' }}
-          onSubmit={authType === 'login' ? handleLogin : handleSignup}
+          onSubmit={handleUpdate}
           validationSchema={
-            authType === 'login'
-              ? validationSchemaLogin
-              : validationSchemaSignup
+            validationSchemaUpdate
           }
         >
           {({ isSubmitting }) => (
@@ -117,10 +97,9 @@ const AuthForm = () => {
                   color="secondary"
                   className={classes.formTitle}
                 >
-                  {authType === 'login'
-                    ? 'Login to your account'
-                    : 'Create a new account'}
+                  Update details
                 </Typography>
+
                 <div className={classes.input}>
                   <PersonIcon className={classes.inputIcon} color="primary" />
                   <TextInput
@@ -132,45 +111,43 @@ const AuthForm = () => {
                     fullWidth
                   />
                 </div>
-                {
-                  authType === 'signup' ? (
-                    <>
-                      <div className={classes.input}>
-                        <FaceIcon className={classes.inputIcon} color="primary" />
-                        <TextInput
-                          name="name"
-                          type="text"
-                          placeholder="Enter name"
-                          label="Name"
-                          required
-                          fullWidth
-                        />
-                      </div>
-                      <div className={classes.input}>
-                        <AlternateEmailIcon className={classes.inputIcon} color="primary" />
-                        <TextInput
-                          name="email"
-                          type="email"
-                          placeholder="Enter email"
-                          label="Email"
-                          required
-                          fullWidth
-                        />
-                      </div>
-                      <div className={classes.input}>
-                        <CallIcon className={classes.inputIcon} color="primary" />
-                        <TextInput
-                          name="phoneNumber"
-                          type="tel"
-                          placeholder="Enter phone number"
-                          label="Phone number"
-                          required
-                          fullWidth
-                        />
-                      </div>
-                    </>
-                  ) : ''
-                }
+
+                <div className={classes.input}>
+                  <FaceIcon className={classes.inputIcon} color="primary" />
+                  <TextInput
+                    name="name"
+                    type="text"
+                    placeholder="Enter name"
+                    label="Name"
+                    required
+                    fullWidth
+                  />
+                </div>
+
+                <div className={classes.input}>
+                  <AlternateEmailIcon className={classes.inputIcon} color="primary" />
+                  <TextInput
+                    name="email"
+                    type="email"
+                    placeholder="Enter email"
+                    label="Email"
+                    required
+                    fullWidth
+                  />
+                </div>
+
+                <div className={classes.input}>
+                  <CallIcon className={classes.inputIcon} color="primary" />
+                  <TextInput
+                    name="phoneNumber"
+                    type="tel"
+                    placeholder="Enter phone number"
+                    label="Phone number"
+                    required
+                    fullWidth
+                  />
+                </div>
+
                 <div className={classes.input}>
                   <LockIcon className={classes.inputIcon} color="primary" />
                   <TextInput
@@ -199,6 +176,43 @@ const AuthForm = () => {
                     }}
                   />
                 </div>
+
+                <div className={classes.input}>
+                  <CallIcon className={classes.inputIcon} color="primary" />
+                  <TextInput
+                    name="batch"
+                    type="text"
+                    placeholder="Enter batch"
+                    label="Batch"
+                    required
+                    fullWidth
+                  />
+                </div>
+
+                <div className={classes.input}>
+                  <CallIcon className={classes.inputIcon} color="primary" />
+                  <TextInput
+                    name="branch"
+                    type="text"
+                    placeholder="Enter branch"
+                    label="Branch"
+                    required
+                    fullWidth
+                  />
+                </div>
+
+                <div className={classes.input}>
+                  <CallIcon className={classes.inputIcon} color="primary" />
+                  <TextInput
+                    name="role"
+                    type="text"
+                    placeholder="Enter role"
+                    label="Role"
+                    required
+                    fullWidth
+                  />
+                </div>
+
                 <Button
                   type="submit"
                   color="secondary"
@@ -219,11 +233,13 @@ const AuthForm = () => {
                       : 'Sign Up'}
                 </Button>
               </Form>
+
               <Divider
                 orientation="vertical"
                 flexItem
                 className={classes.divider}
               />
+
               <div className={classes.sidePanel}>
                 <Typography
                   variant="h6"
@@ -234,6 +250,7 @@ const AuthForm = () => {
                     ? `Don't have an account?`
                     : 'Already have an account?'}
                 </Typography>
+
                 <Button
                   onClick={() =>
                     authType === 'login'
@@ -267,4 +284,4 @@ const AuthForm = () => {
   );
 };
 
-export default AuthForm;
+export default UpdateUser;

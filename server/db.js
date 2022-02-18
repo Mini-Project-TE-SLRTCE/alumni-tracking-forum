@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
-const { MONGODB_URI: url } = require('./utils/config');
+
+// online MongoDB
+// const { MONGODB_URI: url } = require('./utils/config');
+
+// offline MongoDB
+const url = "mongodb://127.0.0.1:27017/Reddish";
 
 const connectToDB = async () => {
   try {

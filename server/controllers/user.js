@@ -37,6 +37,23 @@ const getUser = async (req, res) => {
   res.status(200).json({ userDetails: user, posts: paginatedPosts });
 };
 
+const updateUser = async (req, res) => {
+  const user = await User.updateOne({ username: req.body.username }, { $set: req.body });
+
+  // user = {
+  //   "n": 0 or 1,
+  //   "nModified": 0 or 1,
+  //   "ok": 0 or 1
+  // }
+
+  if (user.nModified === 0) {
+    return res.status(401).send({ message: 'User details are not updated.' });
+  }
+  else {
+    return res.status(200).json(user);
+  }
+};
+
 const setUserAvatar = async (req, res) => {
   const { avatarImage } = req.body;
 
@@ -93,4 +110,4 @@ const removeUserAvatar = async (req, res) => {
   res.status(204).end();
 };
 
-module.exports = { getUser, setUserAvatar, removeUserAvatar };
+module.exports = { getUser, updateUser, setUserAvatar, removeUserAvatar };
