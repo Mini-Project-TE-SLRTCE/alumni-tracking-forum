@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser, updateUser } from '../reducers/userReducer';
+import { loginUser, signupUser, updateUser } from '../reducers/userReducer';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import "yup-phone";
@@ -24,43 +24,60 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
+import EmailIcon from '@material-ui/icons/Email';
 import FaceIcon from '@material-ui/icons/Face';
 import CallIcon from '@material-ui/icons/Call';
+import LabelIcon from '@material-ui/icons/Label';
+import BookIcon from '@material-ui/icons/Book';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import UpdateIcon from '@material-ui/icons/Update';
 
 const validationSchemaUpdate = yup.object({
   username: yup
     .string()
-    .required('Required')
     .max(20, 'Must be at most 20 characters')
     .min(3, 'Must be at least 3 characters')
     .matches(
       /^[a-zA-Z0-9-_]*$/,
       'Only alphanumeric characters allowed, no spaces/symbols'
-    ),
+    )
+    .required(),
   name: yup
     .string()
-    .required('Required'),
-  password: yup
-    .string()
-    .required('Required')
-    .min(6, 'Must be at least 6 characters'),
+    .required(),
   email: yup
     .string()
     .email('Invalid email')
-    .required('Required'),
+    .required(),
   phoneNumber: yup
     .string()
     .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Invalid phone number")
+    .required(),
   // TODO: fix phone validation
+  role: yup
+    .string()
+    .required(),
+  branch: yup
+    .string()
+    .required(),
+  batch: yup
+    .string()
+    .required(),
+  password: yup
+    .string()
+    .min(6, 'Must be at least 6 characters')
 });
 
-const UpdateUser = () => {
+const UpdateUser = ({ userDetails }) => {
   const dispatch = useDispatch();
-  const [authType, setAuthType] = useState('login');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState(null);
-  const classes = useAuthStyles(authType)();
+  const classes = useAuthStyles("signup")();
+
+  // arrays to store "option" of "select" elments
+  const roleOptions = ["Faculty", "Alumni", "Student"];
+  const branchOptions = ["CMPN", "IT", "MECH", "EXTC"];
+  const batchOptions = ["2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014"];
 
   const handleUpdate = async (values, { setSubmitting }) => {
     try {
@@ -68,8 +85,9 @@ const UpdateUser = () => {
       await dispatch(updateUser(values));
       dispatch(
         notify(
-          `Welcome, ${values.name}. You've been successfully registered.`,
-          'success'
+          'Your details have been successfully updated.',
+          'success',
+          window.location.reload() // after successfull update, it will reload the profile page
         )
       );
     } catch (err) {
@@ -83,193 +101,152 @@ const UpdateUser = () => {
       <div className={classes.authWrapper}>
         <Formik
           validateOnChange={true}
-          initialValues={{ username: '', password: '' }}
+          initialValues={{
+            id: userDetails.id,
+            username: userDetails.username,
+            name: userDetails.name,
+            email: userDetails.email,
+            phoneNumber: userDetails.phoneNumber,
+            role: userDetails.role,
+            branch: userDetails.branch,
+            batch: userDetails.batch,
+            password: ''
+          }}
           onSubmit={handleUpdate}
-          validationSchema={
-            validationSchemaUpdate
-          }
+          validationSchema={validationSchemaUpdate}
         >
           {({ isSubmitting }) => (
-            <>
-              <Form className={classes.form}>
-                <Typography
-                  variant="h5"
-                  color="secondary"
-                  className={classes.formTitle}
-                >
-                  Update details
-                </Typography>
-
-                <div className={classes.input}>
-                  <PersonIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="username"
-                    type="text"
-                    placeholder="Enter username"
-                    label="Username"
-                    required
-                    fullWidth
-                  />
-                </div>
-
-                <div className={classes.input}>
-                  <FaceIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="name"
-                    type="text"
-                    placeholder="Enter name"
-                    label="Name"
-                    required
-                    fullWidth
-                  />
-                </div>
-
-                <div className={classes.input}>
-                  <AlternateEmailIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="email"
-                    type="email"
-                    placeholder="Enter email"
-                    label="Email"
-                    required
-                    fullWidth
-                  />
-                </div>
-
-                <div className={classes.input}>
-                  <CallIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="phoneNumber"
-                    type="tel"
-                    placeholder="Enter phone number"
-                    label="Phone number"
-                    required
-                    fullWidth
-                  />
-                </div>
-
-                <div className={classes.input}>
-                  <LockIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="password"
-                    type={showPass ? 'text' : 'password'}
-                    placeholder="Enter password"
-                    label="Password"
-                    required
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() =>
-                              setShowPass((prevState) => !prevState)
-                            }
-                          >
-                            {showPass ? (
-                              <VisibilityOffIcon color="primary" />
-                            ) : (
-                              <VisibilityIcon color="primary" />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </div>
-
-                <div className={classes.input}>
-                  <CallIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="batch"
-                    type="text"
-                    placeholder="Enter batch"
-                    label="Batch"
-                    required
-                    fullWidth
-                  />
-                </div>
-
-                <div className={classes.input}>
-                  <CallIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="branch"
-                    type="text"
-                    placeholder="Enter branch"
-                    label="Branch"
-                    required
-                    fullWidth
-                  />
-                </div>
-
-                <div className={classes.input}>
-                  <CallIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="role"
-                    type="text"
-                    placeholder="Enter role"
-                    label="Role"
-                    required
-                    fullWidth
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  color="secondary"
-                  variant="contained"
-                  size="large"
-                  startIcon={
-                    authType === 'login' ? <ExitToAppIcon /> : <PersonAddIcon />
-                  }
-                  className={classes.submitButton}
-                  disabled={isSubmitting}
-                >
-                  {authType === 'login'
-                    ? isSubmitting
-                      ? 'Logging In'
-                      : 'Login'
-                    : isSubmitting
-                      ? 'Signing Up'
-                      : 'Sign Up'}
-                </Button>
-              </Form>
-
-              <Divider
-                orientation="vertical"
-                flexItem
-                className={classes.divider}
-              />
-
-              <div className={classes.sidePanel}>
-                <Typography
-                  variant="h6"
-                  className={classes.switchText}
-                  color="primary"
-                >
-                  {authType === 'login'
-                    ? `Don't have an account?`
-                    : 'Already have an account?'}
-                </Typography>
-
-                <Button
-                  onClick={() =>
-                    authType === 'login'
-                      ? setAuthType('signup')
-                      : setAuthType('login')
-                  }
+            <Form className={classes.form}>
+              <div className={classes.input}>
+                <PersonIcon className={classes.inputIcon} color="primary" />
+                <TextInput
+                  name="username"
+                  type="text"
+                  placeholder="Enter username"
+                  label="Username"
                   fullWidth
-                  size="large"
-                  color="primary"
-                  variant="outlined"
-                  startIcon={
-                    authType === 'login' ? <PersonAddIcon /> : <ExitToAppIcon />
-                  }
-                  disabled={isSubmitting}
-                >
-                  {authType === 'login' ? 'Sign Up' : 'Login'}
-                </Button>
+                  required
+                />
               </div>
-            </>
+
+              <div className={classes.input}>
+                <FaceIcon className={classes.inputIcon} color="primary" />
+                <TextInput
+                  name="name"
+                  type="text"
+                  placeholder="Enter name"
+                  label="Name"
+                  fullWidth
+                  required
+                />
+              </div>
+
+              <div className={classes.input}>
+                <EmailIcon className={classes.inputIcon} color="primary" />
+                <TextInput
+                  name="email"
+                  type="email"
+                  placeholder="Enter email"
+                  label="Email"
+                  fullWidth
+                  required
+                />
+              </div>
+
+              <div className={classes.input}>
+                <CallIcon className={classes.inputIcon} color="primary" />
+                <TextInput
+                  name="phoneNumber"
+                  type="tel"
+                  placeholder="Enter phone number"
+                  label="Phone number"
+                  fullWidth
+                  required
+                />
+              </div>
+
+              <div className={classes.input}>
+                <LabelIcon className={classes.inputIcon} color="primary" />
+                <TextInput
+                  select
+                  name="role"
+                  type="text"
+                  placeholder="Choose your role"
+                  label="Role"
+                  fullWidth
+                  required
+                  options={roleOptions}
+                />
+              </div>
+
+              <div className={classes.input}>
+                <BookIcon className={classes.inputIcon} color="primary" />
+                <TextInput
+                  select
+                  name="branch"
+                  type="text"
+                  placeholder="Choose your branch"
+                  label="Branch"
+                  fullWidth
+                  required
+                  options={branchOptions}
+                />
+              </div>
+
+              <div className={classes.input}>
+                <CalendarTodayIcon className={classes.inputIcon} color="primary" />
+                <TextInput
+                  select
+                  name="batch"
+                  type="text"
+                  placeholder="Choose your batch"
+                  label="Batch"
+                  fullWidth
+                  required
+                  options={batchOptions}
+                />
+              </div>
+
+              <div className={classes.input}>
+                <LockIcon className={classes.inputIcon} color="primary" />
+                <TextInput
+                  name="password"
+                  type={showPass ? 'text' : 'password'}
+                  placeholder="Enter password"
+                  label="Password"
+                  fullWidth
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() =>
+                            setShowPass((prevState) => !prevState)
+                          }
+                        >
+                          {showPass ? (
+                            <VisibilityOffIcon color="primary" />
+                          ) : (
+                            <VisibilityIcon color="primary" />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </div>
+
+              <Button
+                type="submit"
+                color="secondary"
+                variant="contained"
+                size="large"
+                startIcon={<UpdateIcon />}
+                className={classes.submitButton}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Updating" : "Update"}
+              </Button>
+            </Form>
           )}
         </Formik>
       </div>

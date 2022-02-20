@@ -6,6 +6,7 @@ import UpdateAvatarModal from './UpdateAvatarModal';
 import DarkModeMenuItem from './DarkModeMenuItem';
 import { getCircularAvatar } from '../utils/cloudinaryTransform';
 import storageService from '../utils/localStorage';
+import stringToColor from '../utils/stringtoColor';
 
 import {
   Button,
@@ -53,8 +54,12 @@ const DesktopUserMenu = ({ user, handleLogout }) => {
                 className={classes.avatar}
               />
             ) : (
-              <Avatar variant="rounded" className={classes.avatar}>
-                {loggedUser.username[0]}
+              <Avatar
+                variant="rounded"
+                className={classes.avatar}
+                style={{ backgroundColor: stringToColor(loggedUser.username[0]) }}
+              >
+                {loggedUser.username[0].toUpperCase()}
               </Avatar>
             )}
             <div>

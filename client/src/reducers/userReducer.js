@@ -77,11 +77,11 @@ export const setUser = () => {
 
 export const updateUser = (details) => {
   return async (dispatch) => {
-    const updateUser = await userService.updateUser({ details });
+    const user = await userService.updateUser({ details });
 
     dispatch({
       type: 'UPDATE_USER',
-      payload: updateUser,
+      payload: user,
     });
   };
 };

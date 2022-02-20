@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser, loadUserPosts } from '../reducers/userPageReducer';
 import { notify } from '../reducers/notificationReducer';
 import { getCircularAvatar } from '../utils/cloudinaryTransform';
-// import UpdateUser from './UpdateUser';
+import UpdateUser from './UpdateUser';
 import UserPostCard from './UserPostCard';
 import ErrorPage from './ErrorPage';
 import LoadMoreButton from './LoadMoreButton';
 import LoadingSpinner from './LoadingSpinner';
 import getErrorMsg from '../utils/getErrorMsg';
+import stringToColor from '../utils/stringtoColor';
 
 import {
   Container,
@@ -17,11 +18,19 @@ import {
   useMediaQuery,
   Typography,
   Avatar,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent
 } from '@material-ui/core';
 import { useUserPageStyles } from '../styles/muiStyles';
 import { useTheme } from '@material-ui/core/styles';
 import CakeIcon from '@material-ui/icons/Cake';
 import PersonIcon from '@material-ui/icons/Person';
+import EmailIcon from '@material-ui/icons/Email';
+import PhoneIcon from '@material-ui/icons/Phone';
+
+import '../styles/profile.css';
 
 const UserPage = () => {
   const classes = useUserPageStyles();
@@ -35,6 +44,7 @@ const UserPage = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [pageError, setPageError] = useState(null);
+  const [updateDialog, setUpdateDialog] = useState(false);
 
   useEffect(() => {
     const getUser = async () => {
@@ -73,9 +83,9 @@ const UserPage = () => {
     avatar,
     name,
     email,
-    phonenumber,
+    phoneNumber,
     username: userName,
-    bathc,
+    batch,
     branch,
     role,
     createdAt,
@@ -97,9 +107,20 @@ const UserPage = () => {
 
   return (
     <Container disableGutters>
-      <Paper variant="outlined" className={classes.mainPaper}>
-        <Paper className={classes.userInfoWrapper} elevation={0}>
-          <div className={classes.avatarWrapper}>
+      <Paper elevation={0} className={classes.mainPaper}>
+        <div className='p-cnt'>
+          <div className='p-edit-btn'>
+            <Button
+              variant="contained"
+              color="secondary"
+              style={{ textTransform: "initial" }}
+              onClick={() => setUpdateDialog(!updateDialog)}
+            >
+              Edit Profile
+            </Button>
+          </div>
+
+          <center>
             {avatar && avatar.exists ? (
               <Avatar
                 alt={userName}
@@ -108,90 +129,66 @@ const UserPage = () => {
               />
             ) : (
               <Avatar
-                style={{ backgroundColor: '#941a1c' }}
+                style={{ backgroundColor: stringToColor(username[0]) }}
                 className={classes.avatar}
               >
-                <h1>{userName[0]}</h1>
+                <h1>{userName[0].toUpperCase()}</h1>
               </Avatar>
             )}
+          </center>
 
-            <Typography variant="h6" color="secondary">
-              u/{userName}
+          <h1>{name}</h1>
+
+          {(role !== null && branch !== null && batch !== null) &&
+            <Typography variant="subtitle2">
+              {role[0].toUpperCase() + role.slice(1,)} •&nbsp;
+              {branch.toUpperCase()} •&nbsp;
+              {batch}
             </Typography>
-            <Typography variant="subtitle1">
-              Hello, {name}
-            </Typography>
-          </div>
+          }
 
-          <div className={classes.rightWrapper}>
-            <div className={classes.itemWrapper}>
-              <div className={classes.twoItemsDiv}>
-                <Typography variant="body1" color="secondary">
-                  Cake Day
-                </Typography>
-
-                <Typography
-                  variant="h6"
-                  color="secondary"
-                  className={classes.cakeDay}
-                >
-                  <CakeIcon />
-                  {String(new Date(createdAt)).split(' ').slice(1, 4).join(' ')}
-                </Typography>
-              </div>
-
-              <div className={classes.twoItemsDiv}>
-                <Typography variant="body1" color="secondary">
-                  <strong>{posts.length}</strong> Posts
-                </Typography>
-
-                <Typography variant="body1" color="secondary">
-                  <strong>{totalComments}</strong> Comments
-                </Typography>
-              </div>
+          <div className='profile-details-1-cnt'>
+            <div className='profile-details-1'>
+              <CakeIcon />&nbsp;
+              Joined on {String(new Date(createdAt)).split(' ').slice(1, 4).join(' ')}
             </div>
-
-            <div className={classes.itemWrapper}>
-              <div className={classes.twoItemsDiv}>
-                <Typography variant="body1" color="secondary">
-                  Karma
-                </Typography>
-
-                <Typography variant="h6" color="secondary">
-                  {karmaPoints.commentKarma + karmaPoints.postKarma}
-                </Typography>
-              </div>
-
-              <div className={classes.twoItemsDiv}>
-                <Typography variant="body1" color="secondary">
-                  Post Karma <strong>{karmaPoints.postKarma}</strong>
-                </Typography>
-
-                <Typography variant="body1" color="secondary">
-                  Comment Karma <strong>{karmaPoints.commentKarma}</strong>
-                </Typography>
-              </div>
+            <div className='profile-details-1'>
+              <EmailIcon />&nbsp;
+              <a href={`mailto:${email}`}>{email}</a>
+            </div>
+            <div className='profile-details-1'>
+              <PhoneIcon />&nbsp;
+              <a href={`tel:${phoneNumber}`}>{phoneNumber}</a>
             </div>
           </div>
-        </Paper>
 
-        <Paper className={classes.userInfoWrapper} elevation={0}>
-          <div style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
-            <div>Hello</div>
-            <div>Hello</div>
-            <div>Hello</div>
+          <div className='profile-details-2-cnt'>
+            <div className='profile-details-2'>
+              <strong>{posts.length}</strong><br />
+              Posts
+            </div>
+
+            <div className='profile-details-2'>
+              <strong>{totalComments}</strong><br />
+              Comments
+            </div>
+
+            <div className='profile-details-2'>
+              <strong>{karmaPoints.commentKarma + karmaPoints.postKarma}</strong><br />
+              Karma
+            </div>
+
+            <div className='profile-details-2'>
+              <strong>{karmaPoints.postKarma}</strong><br />
+              Post Karma
+            </div>
+
+            <div className='profile-details-2'>
+              <strong>{karmaPoints.commentKarma}</strong><br />
+              Comment Karma
+            </div>
           </div>
-          <div style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
-            <div>Hello</div>
-            <div>Hello</div>
-            <div>Hello</div>
-          </div>
-          <div style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
-            <div>Hello</div>
-            <div>Hello</div>
-            <div>Hello</div>
-          </div>
-        </Paper>
+        </div>
 
         <div className={classes.postsPaper}>
           {userInfo.posts.results.length !== 0 ? (
@@ -220,7 +217,16 @@ const UserPage = () => {
           />
         )}
       </Paper>
-    </Container>
+
+      {/* dialog box to update user details */}
+      <Dialog open={updateDialog} onClose={() => setUpdateDialog(false)}>
+        <DialogTitle>Update Details</DialogTitle>
+
+        <DialogContent>
+          <UpdateUser userDetails={userInfo.userDetails} />
+        </DialogContent>
+      </Dialog>
+    </Container >
   );
 };
 

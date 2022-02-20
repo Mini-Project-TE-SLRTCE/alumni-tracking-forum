@@ -122,6 +122,7 @@ export const useAuthStyles = (authType) =>
       input: {
         display: "flex",
         alignItems: "flex-end",
+        marginBottom: "10px"
       },
       inputIcon: {
         marginRight: 8,

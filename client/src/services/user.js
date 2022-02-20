@@ -19,7 +19,7 @@ const getUser = async (username, limit, page) => {
 
 const updateUser = async (details) => {
   const response = await axios.put(
-    `${baseUrl}/${details.username}`,
+    `${baseUrl}/${details.id}`,
     details,
     setConfig()
   );

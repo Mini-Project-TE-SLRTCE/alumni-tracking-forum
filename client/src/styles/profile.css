@@ -1,0 +1,50 @@
+.p-cnt {
+    margin: 20px;
+    position: relative;
+    text-align: center;
+    /* border: 1px solid #000; */
+}
+
+.p-edit-btn {
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+
+.profile-details-1-cnt {
+    display: flex;
+    justify-content: center;
+    margin-top: 21.44px;
+    /* border: 1px solid red; */
+}
+
+.profile-details-1 {
+    display: flex;
+    align-items: center;
+    margin-right: 40px;
+    color: #696969;
+}
+
+.profile-details-1 a {
+    color: #696969;
+    text-decoration: none;
+}
+
+.profile-details-1 a:hover {
+    text-decoration: underline;
+}
+
+.profile-details-2-cnt {
+    display: flex;
+    justify-content: center;
+    margin-top: 33.44px;
+    /* border: 1px solid red; */
+}
+
+.profile-details-2 {
+    margin: auto 12px;
+    padding: 12px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    /* box-shadow: 0 0 10px #dadada; */
+}

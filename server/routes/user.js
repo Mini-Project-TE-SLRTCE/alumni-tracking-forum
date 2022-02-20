@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 router.get('/:username', getUser);
-router.put('/:username', auth, updateUser);
+router.put('/:id', auth, updateUser);
 router.post('/avatar', auth, setUserAvatar);
 router.delete('/avatar', auth, removeUserAvatar);
 

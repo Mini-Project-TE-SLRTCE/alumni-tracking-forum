@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Post = require('../models/post');
 const { cloudinary, UPLOAD_PRESET } = require('../utils/config');
@@ -38,7 +39,31 @@ const getUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const user = await User.updateOne({ username: req.body.username }, { $set: req.body });
+  const {
+    id,
+    username,
+    name,
+    email,
+    phoneNumber,
+    role,
+    branch,
+    batch,
+    password
+  } = req.body.details;
+
+  let detailsToUpdate;
+
+  if (password === '') {
+    detailsToUpdate = { username, name, email, phoneNumber, role, branch, batch };
+  }
+  else {
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    detailsToUpdate = { username, name, email, phoneNumber, role, branch, batch, passwordHash };
+  }
+
+  const user = await User.update({ _id: id }, { $set: detailsToUpdate });
 
   // user = {
   //   "n": 0 or 1,
@@ -47,10 +72,18 @@ const updateUser = async (req, res) => {
   // }
 
   if (user.nModified === 0) {
-    return res.status(401).send({ message: 'User details are not updated.' });
+    return res.status(400).send({ message: 'User details are not updated.' });
   }
   else {
-    return res.status(200).json(user);
+    return res.status(200).json({
+      username: user.username,
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
+      branch: user.branch,
+      batch: user.batch,
+    });
   }
 };
 
