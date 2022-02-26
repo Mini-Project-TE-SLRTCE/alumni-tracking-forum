@@ -101,6 +101,14 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    resetPasswordToken: {
+      type: String,
+      default: ""
+    },
+    resetPasswordTokenExpiryTime: {
+      type: Number,
+      default: 0
+    }
   },
   {
     timestamps: true,

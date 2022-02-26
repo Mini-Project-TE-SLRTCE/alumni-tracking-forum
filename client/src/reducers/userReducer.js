@@ -8,6 +8,8 @@ const userReducer = (state = null, action) => {
       return action.payload;
     case 'SIGNUP':
       return action.payload;
+    case 'FORGOT_PWD':
+      return action.payload;
     case 'LOGOUT':
       return null;
     case 'SET_USER':
@@ -44,6 +46,17 @@ export const signupUser = (credentials) => {
 
     dispatch({
       type: 'SIGNUP',
+      payload: user,
+    });
+  };
+};
+
+export const forgotPwd = (email) => {
+  return async (dispatch) => {
+    const user = await authService.forgotPwd(email);
+
+    dispatch({
+      type: 'FORGOT_PWD',
       payload: user,
     });
   };

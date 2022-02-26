@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const crypto = require("crypto");
 const User = require('../models/user');
+const sendEmail = require('../utils/sendEmail');
 const { SECRET } = require('../utils/config');
 
 const loginUser = async (req, res) => {
@@ -91,4 +93,79 @@ const signupUser = async (req, res) => {
   });
 };
 
-module.exports = { loginUser, signupUser };
+const forgotPwd = async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res
+      .status(400)
+      .send({ message: 'No account with this email address has been registered.' });
+  }
+
+  let token;
+
+  while (true) {
+    // use 'crypto' package here
+    token = crypto.randomBytes(20).toString("hex");
+
+    // checking whether token already existing or not
+    const isTokenAlreadyExist = await User.findOne({ resetPasswordToken: token });
+
+    // if token is not existing,
+    // i.e. if token is unique
+    // then break the loop
+    if (isTokenAlreadyExist === null || isTokenAlreadyExist === undefined) {
+      break;
+    }
+  }
+
+  // generating expiry time for token
+  // expiry time of a token = <current time> + <10 minutes>
+  const tokenExpiryTime = Date.now() + 600000;
+
+  // saving generated token and its expiry time into database
+  const tokenSaveRes = await User.updateOne({ email }, {
+    $set: {
+      resetPasswordToken: token,
+      resetPasswordTokenExpiryTime: tokenExpiryTime
+    }
+  });
+
+  if (!tokenSaveRes) {
+    return res
+      .status(400)
+      .send({ message: 'Oops! An error occurred.' });
+  }
+
+  // if token and its expiry time successfully saved into database,
+  // then sending reset password link via email to the user
+  // body of email
+  const emailText = "You are receiving this email because you (or someone else) has been requested to change your password of Alumni Tracking System.\n\n" +
+    "Below is the link provided to reset your password. And the link is valid only for 10 minutes.\n" +
+    `http://localhost:3000/reset-pwd/${token}\n\n` +
+    "If you are not requested for this link, simply ignore this email. The will link automatically expire after 10 minutes.";
+
+  // sending email
+  const sendEmailRes = await sendEmail({
+    emailTo: email,
+    emailSubject: "Password Reset - Alumni Tracking System",
+    emailText
+  });
+
+  console.log("CNT:");
+  console.log(sendEmailRes);
+
+  if (sendEmailRes.status === 200) {
+    return res
+      .status(200)
+      .send(sendEmailRes.msg);
+  } else {
+    return res
+      .status(400)
+      .send({ message: 'Oops! An error occurred while sending email.' });
+  }
+};
+
+module.exports = { loginUser, signupUser, forgotPwd };

@@ -41,6 +41,8 @@ const DesktopUserMenu = ({ user, handleLogout }) => {
 
   const loggedUser = storageService.loadUser() || user;
 
+  console.log(loggedUser);
+
   return (
     <div>
       {loggedUser ? (

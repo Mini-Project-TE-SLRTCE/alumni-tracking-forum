@@ -17,6 +17,11 @@ const signup = async (enteredData) => {
   return response.data;
 };
 
-const authService = { setToken, login, signup };
+const forgotPwd = async (email) => {
+  const response = await axios.post(`${backendUrl}/api/forgot-pwd`, email);
+  return response.data;
+};
+
+const authService = { setToken, login, signup, forgotPwd };
 
 export default authService;

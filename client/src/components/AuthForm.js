@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser, signupUser } from '../reducers/userReducer';
+import { loginUser, signupUser, forgotPwd } from '../reducers/userReducer';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import "yup-phone";
@@ -57,7 +57,14 @@ const validationSchemaSignup = yup.object({
 
 const validationSchemaLogin = yup.object({
   username: yup.string().required('Required'),
-  password: yup.string().required('Required'),
+  password: yup.string().required('Required')
+});
+
+const validationSchemaForgotPwd = yup.object({
+  email: yup
+    .string()
+    .email('Invalid email')
+    .required('Required')
 });
 
 const AuthForm = () => {
@@ -65,7 +72,7 @@ const AuthForm = () => {
   const [authType, setAuthType] = useState('login');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState(null);
-  const classes = useAuthStyles(authType)();
+  const classes = useAuthStyles(authType === 'signup' ? 'signup' : 'login')();
 
   const handleLogin = async (values, { setSubmitting }) => {
     try {
@@ -96,17 +103,35 @@ const AuthForm = () => {
     }
   };
 
+  const handleForgotPwd = async (values, { setSubmitting }) => {
+    try {
+      setSubmitting(true);
+      await dispatch(forgotPwd(values));
+      dispatch(
+        notify(
+          `Password reset link sent to ${values.email}.`,
+          'success'
+        )
+      );
+    } catch (err) {
+      setSubmitting(false);
+      setError(getErrorMsg(err));
+    }
+  };
+
   return (
     <div>
       <div className={classes.authWrapper}>
         <Formik
           validateOnChange={true}
           initialValues={{ username: '', password: '' }}
-          onSubmit={authType === 'login' ? handleLogin : handleSignup}
+          onSubmit={authType === 'login' ? handleLogin : authType === 'forgotPwd' ? handleForgotPwd : handleSignup}
           validationSchema={
             authType === 'login'
               ? validationSchemaLogin
-              : validationSchemaSignup
+              : authType === 'forgotPwd'
+                ? validationSchemaForgotPwd
+                : validationSchemaSignup
           }
         >
           {({ isSubmitting }) => (
@@ -119,93 +144,116 @@ const AuthForm = () => {
                 >
                   {authType === 'login'
                     ? 'Login to your account'
-                    : 'Create a new account'}
+                    : authType === 'forgotPwd'
+                      ? 'Forgot password'
+                      : 'Create a new account'}
                 </Typography>
-                <div className={classes.input}>
-                  <PersonIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="username"
-                    type="text"
-                    placeholder="Enter username"
-                    label="Username"
-                    required
-                    fullWidth
-                  />
-                </div>
+
                 {
-                  authType === 'signup' ? (
-                    <>
-                      <div className={classes.input}>
-                        <FaceIcon className={classes.inputIcon} color="primary" />
-                        <TextInput
-                          name="name"
-                          type="text"
-                          placeholder="Enter name"
-                          label="Name"
-                          required
-                          fullWidth
-                        />
-                      </div>
-                      <div className={classes.input}>
-                        <AlternateEmailIcon className={classes.inputIcon} color="primary" />
-                        <TextInput
-                          name="email"
-                          type="email"
-                          placeholder="Enter email"
-                          label="Email"
-                          required
-                          fullWidth
-                        />
-                      </div>
-                      <div className={classes.input}>
-                        <CallIcon className={classes.inputIcon} color="primary" />
-                        <TextInput
-                          name="phoneNumber"
-                          type="tel"
-                          placeholder="Enter phone number"
-                          label="Phone number"
-                          required
-                          fullWidth
-                        />
-                      </div>
-                    </>
+                  authType !== 'forgotPwd' ? (
+                    <div className={classes.input}>
+                      <PersonIcon className={classes.inputIcon} color="primary" />
+                      <TextInput
+                        name="username"
+                        type="text"
+                        placeholder="Enter username"
+                        label="Username"
+                        required
+                        fullWidth
+                      />
+                    </div>
                   ) : ''
                 }
-                <div className={classes.input}>
-                  <LockIcon className={classes.inputIcon} color="primary" />
-                  <TextInput
-                    name="password"
-                    type={showPass ? 'text' : 'password'}
-                    placeholder="Enter password"
-                    label="Password"
-                    required
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() =>
-                              setShowPass((prevState) => !prevState)
-                            }
-                          >
-                            {showPass ? (
-                              <VisibilityOffIcon color="primary" />
-                            ) : (
-                              <VisibilityIcon color="primary" />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </div>
+
+                {
+                  authType === 'signup' ? (
+                    <div className={classes.input}>
+                      <FaceIcon className={classes.inputIcon} color="primary" />
+                      <TextInput
+                        name="name"
+                        type="text"
+                        placeholder="Enter name"
+                        label="Name"
+                        required
+                        fullWidth
+                      />
+                    </div>
+                  ) : ''
+                }
+
+                {
+                  authType !== 'login' ? (
+                    <div className={classes.input}>
+                      <AlternateEmailIcon className={classes.inputIcon} color="primary" />
+                      <TextInput
+                        name="email"
+                        type="email"
+                        placeholder="Enter email"
+                        label="Email"
+                        required
+                        fullWidth
+                      />
+                    </div>
+                  ) : ''
+                }
+
+                {
+                  authType === 'signup' ? (
+                    <div className={classes.input}>
+                      <CallIcon className={classes.inputIcon} color="primary" />
+                      <TextInput
+                        name="phoneNumber"
+                        type="tel"
+                        placeholder="Enter phone number"
+                        label="Phone number"
+                        required
+                        fullWidth
+                      />
+                    </div>
+                  ) : ''
+                }
+
+                {
+                  authType !== 'forgotPwd' ? (
+                    <div className={classes.input}>
+                      <LockIcon className={classes.inputIcon} color="primary" />
+                      <TextInput
+                        name="password"
+                        type={showPass ? 'text' : 'password'}
+                        placeholder="Enter password"
+                        label="Password"
+                        required
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() =>
+                                  setShowPass((prevState) => !prevState)
+                                }
+                              >
+                                {showPass ? (
+                                  <VisibilityOffIcon color="primary" />
+                                ) : (
+                                  <VisibilityIcon color="primary" />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </div>
+                  ) : ''
+                }
+
                 <Button
                   type="submit"
                   color="secondary"
                   variant="contained"
                   size="large"
                   startIcon={
-                    authType === 'login' ? <ExitToAppIcon /> : <PersonAddIcon />
+                    authType === 'login' ? <ExitToAppIcon /> :
+                      authType === 'forgotPwd' ? <AlternateEmailIcon /> : <PersonAddIcon />
                   }
                   className={classes.submitButton}
                   disabled={isSubmitting}
@@ -214,29 +262,58 @@ const AuthForm = () => {
                     ? isSubmitting
                       ? 'Logging In'
                       : 'Login'
-                    : isSubmitting
-                      ? 'Signing Up'
-                      : 'Sign Up'}
+                    : authType === 'forgotPwd'
+                      ? isSubmitting
+                        ? 'Sending Reset Link'
+                        : 'Send Reset Link'
+                      : isSubmitting
+                        ? 'Signing Up'
+                        : 'Sign Up'}
                 </Button>
+
+                {
+                  authType !== 'signup' ? (
+                    authType === 'login' ? (
+                      <a
+                        className={classes.forgotPwdLink}
+                        href="#"
+                        onClick={() => setAuthType('forgotPwd')}
+                      >
+                        Forgot Password?
+                      </a>
+                    ) : (
+                      <a
+                        className={classes.forgotPwdLink}
+                        href="#"
+                        onClick={() => setAuthType('login')}
+                      >
+                        Login?
+                      </a>
+                    )
+                  ) : ''
+                }
               </Form>
+
               <Divider
                 orientation="vertical"
                 flexItem
                 className={classes.divider}
               />
+
               <div className={classes.sidePanel}>
                 <Typography
                   variant="h6"
                   className={classes.switchText}
                   color="primary"
                 >
-                  {authType === 'login'
+                  {authType !== 'signup'
                     ? `Don't have an account?`
                     : 'Already have an account?'}
                 </Typography>
+
                 <Button
                   onClick={() =>
-                    authType === 'login'
+                    authType !== 'signup'
                       ? setAuthType('signup')
                       : setAuthType('login')
                   }
@@ -245,17 +322,18 @@ const AuthForm = () => {
                   color="primary"
                   variant="outlined"
                   startIcon={
-                    authType === 'login' ? <PersonAddIcon /> : <ExitToAppIcon />
+                    authType !== 'signup' ? <PersonAddIcon /> : <ExitToAppIcon />
                   }
                   disabled={isSubmitting}
                 >
-                  {authType === 'login' ? 'Sign Up' : 'Login'}
+                  {authType !== 'signup' ? 'Sign Up' : 'Login'}
                 </Button>
               </div>
             </>
           )}
         </Formik>
       </div>
+
       <div>
         <AlertMessage
           error={error}
@@ -263,7 +341,7 @@ const AuthForm = () => {
           clearError={() => setError(null)}
         />
       </div>
-    </div>
+    </div >
   );
 };
 

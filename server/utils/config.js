@@ -5,6 +5,8 @@ const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
 const SECRET = process.env.SECRET;
 const UPLOAD_PRESET = process.env.UPLOAD_PRESET || 'ml_default';
+const GMAIL = process.env.GMAIL;
+const GMAIL_PWD = process.env.GMAIL_PWD;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -18,4 +20,6 @@ module.exports = {
   SECRET,
   cloudinary,
   UPLOAD_PRESET,
+  GMAIL,
+  GMAIL_PWD
 };

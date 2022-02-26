@@ -135,6 +135,12 @@ export const useAuthStyles = (authType) =>
         marginLeft: 40,
         marginRight: 40,
       },
+      forgotPwdLink: {
+        marginTop: "20px",
+        color: "#0d47a1",
+        textAlign: "center",
+        textDecoration: "none"
+      }
     }),
     { index: 1 }
   );
