@@ -4,7 +4,7 @@ const cloudinary = require('cloudinary').v2;
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
 const SECRET = process.env.SECRET;
-const UPLOAD_PRESET = process.env.UPLOAD_PRESET || 'ml_default';
+const UPLOAD_PRESET = 'ml_default';
 const GMAIL = process.env.GMAIL;
 const GMAIL_PWD = process.env.GMAIL_PWD;
 

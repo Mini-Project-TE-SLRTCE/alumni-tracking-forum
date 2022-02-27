@@ -24,7 +24,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
+import EmailIcon from '@material-ui/icons/Email';
 import FaceIcon from '@material-ui/icons/Face';
 import CallIcon from '@material-ui/icons/Call';
 
@@ -109,7 +109,7 @@ const AuthForm = () => {
       await dispatch(forgotPwd(values));
       dispatch(
         notify(
-          `Password reset link sent to ${values.email}.`,
+          `Password reset link has been sent to ${values.email}.`,
           'success'
         )
       );
@@ -124,7 +124,7 @@ const AuthForm = () => {
       <div className={classes.authWrapper}>
         <Formik
           validateOnChange={true}
-          initialValues={{ username: '', password: '' }}
+          initialValues={{ username: '', name: '', email: '', phoneNumber: '', password: '' }}
           onSubmit={authType === 'login' ? handleLogin : authType === 'forgotPwd' ? handleForgotPwd : handleSignup}
           validationSchema={
             authType === 'login'
@@ -184,7 +184,7 @@ const AuthForm = () => {
                 {
                   authType !== 'login' ? (
                     <div className={classes.input}>
-                      <AlternateEmailIcon className={classes.inputIcon} color="primary" />
+                      <EmailIcon className={classes.inputIcon} color="primary" />
                       <TextInput
                         name="email"
                         type="email"
@@ -253,7 +253,7 @@ const AuthForm = () => {
                   size="large"
                   startIcon={
                     authType === 'login' ? <ExitToAppIcon /> :
-                      authType === 'forgotPwd' ? <AlternateEmailIcon /> : <PersonAddIcon />
+                      authType === 'forgotPwd' ? <EmailIcon /> : <PersonAddIcon />
                   }
                   className={classes.submitButton}
                   disabled={isSubmitting}

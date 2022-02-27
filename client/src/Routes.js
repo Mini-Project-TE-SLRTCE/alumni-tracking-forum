@@ -7,6 +7,7 @@ import UserPage from "./components/UserPage";
 import SubPage from "./components/SubPage";
 import TopSubsPanel from "./components/TopSubsPanel";
 import SearchResults from "./components/SearchResults";
+import ResetPassword from "./components/ResetPassword";
 import NotFoundPage from "./components/NotFoundPage";
 
 import { Container } from "@material-ui/core/";
@@ -41,6 +42,9 @@ const Routes = () => {
       </Route>
       <Route exact path="/search/:query">
         <SearchResults />
+      </Route>
+      <Route exact path="/reset-password/:token">
+        <ResetPassword />
       </Route>
       <Route>
         <NotFoundPage />

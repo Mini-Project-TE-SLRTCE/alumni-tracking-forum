@@ -10,6 +10,8 @@ const userReducer = (state = null, action) => {
       return action.payload;
     case 'FORGOT_PWD':
       return action.payload;
+    case 'RESET_PWD':
+      return action.payload;
     case 'LOGOUT':
       return null;
     case 'SET_USER':
@@ -57,6 +59,17 @@ export const forgotPwd = (email) => {
 
     dispatch({
       type: 'FORGOT_PWD',
+      payload: user,
+    });
+  };
+};
+
+export const resetPwd = (enteredData) => {
+  return async (dispatch) => {
+    const user = await authService.resetPwd(enteredData);
+
+    dispatch({
+      type: 'RESET_PWD',
       payload: user,
     });
   };

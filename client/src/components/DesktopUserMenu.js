@@ -41,11 +41,9 @@ const DesktopUserMenu = ({ user, handleLogout }) => {
 
   const loggedUser = storageService.loadUser() || user;
 
-  console.log(loggedUser);
-
   return (
     <div>
-      {loggedUser ? (
+      {loggedUser?.username ? (
         <>
           <Button onClick={handleMenu} className={classes.userBtn}>
             {loggedUser?.avatar?.exists ? (

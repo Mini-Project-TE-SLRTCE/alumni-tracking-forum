@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const User = require('../models/user');
 const sendEmail = require('../utils/sendEmail');
+const verifyResetPasswordToken = require('../utils/verifyResetPasswordToken');
 const { SECRET } = require('../utils/config');
 
 const loginUser = async (req, res) => {
@@ -40,7 +41,6 @@ const loginUser = async (req, res) => {
 };
 
 const signupUser = async (req, res) => {
-  console.log(req.body);
   const { username, password, name, email, phoneNumber } = req.body;
 
   if (!password || password.length < 6) {
@@ -144,7 +144,7 @@ const forgotPwd = async (req, res) => {
   // body of email
   const emailText = "You are receiving this email because you (or someone else) has been requested to change your password of Alumni Tracking System.\n\n" +
     "Below is the link provided to reset your password. And the link is valid only for 10 minutes.\n" +
-    `http://localhost:3000/reset-pwd/${token}\n\n` +
+    `http://localhost:3000/reset-password/${token}\n\n` +
     "If you are not requested for this link, simply ignore this email. The will link automatically expire after 10 minutes.";
 
   // sending email
@@ -153,9 +153,6 @@ const forgotPwd = async (req, res) => {
     emailSubject: "Password Reset - Alumni Tracking System",
     emailText
   });
-
-  console.log("CNT:");
-  console.log(sendEmailRes);
 
   if (sendEmailRes.status === 200) {
     return res
@@ -168,4 +165,49 @@ const forgotPwd = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, signupUser, forgotPwd };
+const resetPwd = async (req, res) => {
+  const { token, password } = req.body;
+
+  // verifying token
+  const tokenStatus = await verifyResetPasswordToken(token);
+
+  if (tokenStatus === 'token not found') {
+    return res
+      .status(400)
+      .send({ message: 'Token is not valid.' });
+  }
+
+  if (tokenStatus === 'token expired') {
+    await User.updateOne({ resetPasswordToken: token }, {
+      $set: {
+        resetPasswordToken: "",
+        resetPasswordTokenExpiryTime: 0
+      }
+    });
+
+    return res
+      .status(400)
+      .send({ message: 'Token has been expired.' });
+  }
+
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(password, saltRounds);
+
+  const passwordUpdate = await User.updateOne({ resetPasswordToken: token }, {
+    $set: {
+      passwordHash,
+      resetPasswordToken: "",
+      resetPasswordTokenExpiryTime: 0
+    }
+  });
+
+  if (!passwordUpdate) {
+    return res
+      .status(400)
+      .send({ message: 'Oops! An error occurred while updating password.' });
+  }
+
+  return res.status(200).send({ message: 'Password updated.' });
+};
+
+module.exports = { loginUser, signupUser, forgotPwd, resetPwd };

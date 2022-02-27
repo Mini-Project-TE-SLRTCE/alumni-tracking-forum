@@ -37,9 +37,6 @@ const sendEmail = async ({ emailTo, emailSubject, emailText }) => {
       };
     });
 
-  console.log("Send Email Function:");
-  console.log(res);
-
   return res;
 }
 
