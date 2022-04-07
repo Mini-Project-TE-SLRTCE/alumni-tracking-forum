@@ -29,6 +29,7 @@ import CakeIcon from '@material-ui/icons/Cake';
 import PersonIcon from '@material-ui/icons/Person';
 import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
+import LinkedInIcon from '@material-ui/icons/LinkedIn';
 
 import '../styles/profile.css';
 
@@ -84,6 +85,7 @@ const UserPage = () => {
     name,
     email,
     phoneNumber,
+    linkedinUsername,
     username: userName,
     batch,
     branch,
@@ -159,6 +161,10 @@ const UserPage = () => {
             <div className='profile-details-1'>
               <PhoneIcon />&nbsp;
               <a href={`tel:${phoneNumber}`}>{phoneNumber}</a>
+            </div>
+            <div className='profile-details-1'>
+              <LinkedInIcon />&nbsp;
+              <a href={`https://www.linkedin.com/in/${linkedinUsername}`} target='_blank'>{linkedinUsername}</a>
             </div>
           </div>
 

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import PostForm from './PostForm';
 import HideOnScroll from './HideOnScroll';
 import { getCircularAvatar } from '../utils/cloudinaryTransform';
+import stringToColor from '../utils/stringtoColor';
 
 import { DialogTitle, DialogContent } from './CustomDialogTitle';
 import {
@@ -101,8 +102,11 @@ const AddPostModal = ({
               src={getCircularAvatar(user.avatar.imageLink)}
             />
           ) : (
-            <Avatar className={classes.defaultAvatar}>
-              {user.username[0]}
+            <Avatar
+              style={{ backgroundColor: stringToColor(user.username[0]) }}
+              className={classes.avatar}
+            >
+              <strong>{user.username[0].toUpperCase()}</strong>
             </Avatar>
           )}
           <Button

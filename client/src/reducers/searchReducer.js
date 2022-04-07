@@ -1,4 +1,5 @@
 import postService from '../services/posts';
+import userService from '../services/user';
 
 const searchReducer = (state = null, action) => {
   switch (action.type) {
@@ -23,11 +24,18 @@ const searchReducer = (state = null, action) => {
 
 export const setSearchResults = (query) => {
   return async (dispatch) => {
-    const results = await postService.getSearchResults(query, 10, 1);
+    const userResults = await userService.getSearchResults(query, 10, 1);
+    const postResults = await postService.getSearchResults(query, 10, 1);
+
+    const results = {
+      postResults: postResults.postResults,
+      userResults: userResults.userResults,
+      googleUserResults: userResults.googleResults
+    };
 
     dispatch({
       type: 'SET_SEARCH_RESULTS',
-      payload: results,
+      payload: results
     });
   };
 };

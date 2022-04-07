@@ -114,6 +114,9 @@ const getSearchedPosts = async (req, res) => {
     ],
   };
 
+  console.log("Post Find Query");
+  console.log(findQuery);
+
   const postsCount = await Post.find(findQuery).countDocuments();
   const paginated = paginateResults(page, limit, postsCount);
   const searchedPosts = await Post.find(findQuery)
@@ -126,7 +129,7 @@ const getSearchedPosts = async (req, res) => {
 
   const paginatedPosts = {
     previous: paginated.results.previous,
-    results: searchedPosts,
+    postResults: searchedPosts,
     next: paginated.results.next,
   };
 

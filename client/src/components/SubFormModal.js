@@ -60,7 +60,7 @@ const SubFormModal = ({ type, handleCloseMenu }) => {
       >
         <DialogTitle onClose={handleClose}>Create a new subreddish</DialogTitle>
         <DialogContent>
-          <SubForm />
+          <SubForm closing={setOpen} />
         </DialogContent>
       </Dialog>
     </div>

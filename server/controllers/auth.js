@@ -41,7 +41,7 @@ const loginUser = async (req, res) => {
 };
 
 const signupUser = async (req, res) => {
-  const { username, password, name, email, phoneNumber } = req.body;
+  const { username, password, name, email, phoneNumber, linkedinUsername } = req.body;
 
   if (!password || password.length < 6) {
     return res
@@ -73,7 +73,8 @@ const signupUser = async (req, res) => {
     passwordHash,
     name,
     email,
-    phoneNumber
+    phoneNumber,
+    linkedinUsername
   });
 
   const savedUser = await user.save();

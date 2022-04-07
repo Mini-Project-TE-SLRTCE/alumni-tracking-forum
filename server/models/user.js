@@ -43,6 +43,12 @@ const userSchema = new mongoose.Schema(
       minlength: 10,
       trim: true
     },
+    linkedinUsername: {
+      type: String,
+      lowercase: true,
+      unique: true,
+      required: true
+    },
     passwordHash: {
       type: String,
       required: true,

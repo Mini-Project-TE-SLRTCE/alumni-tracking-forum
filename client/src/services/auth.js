@@ -3,6 +3,8 @@ import backendUrl from '../backendUrl';
 
 export let token = null;
 
+const baseUrl = `${backendUrl}/api/users`;
+
 const setToken = (newToken) => {
   token = newToken;
 };
@@ -27,6 +29,12 @@ const resetPwd = async (enteredData) => {
   return response.data;
 };
 
-const authService = { setToken, login, signup, forgotPwd, resetPwd };
+const authService = {
+  setToken,
+  login,
+  signup,
+  forgotPwd,
+  resetPwd
+};
 
 export default authService;

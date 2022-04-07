@@ -182,8 +182,13 @@ export const useDialogStyles = makeStyles(
     createSubBtn: {
       marginTop: "1em",
     },
-    defaultAvatar: {
-      backgroundColor: theme.palette.secondary.main,
+    avatar: {
+      width: "2em",
+      height: "2em",
+      [theme.breakpoints.down("xs")]: {
+        width: "1em",
+        height: "1em",
+      },
     },
   }),
   { index: 1 }
@@ -226,6 +231,51 @@ export const usePostListStyles = makeStyles(
       marginTop: "12em",
       marginBottom: "6em",
     },
+  }),
+  { index: 1 }
+);
+
+export const useUserCardStyles = makeStyles(
+  (theme) => ({
+    root: {
+      width: "auto",
+      borderRadius: 0,
+    },
+    mainBox: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "10px 16px",
+    },
+    userDetails: {
+      display: "flex",
+      alignItems: "center",
+    },
+    avatarContainer: {
+      padding: "10px",
+    },
+    avatar: {
+      width: "2cm",
+      height: "2cm",
+    },
+    details: {
+      paddingLeft: "10px",
+    },
+    name: {
+      paddingBottom: "2px",
+      fontWeight: "bold",
+      fontSize: "1.3rem",
+    },
+    subDetails: {
+      paddingTop: "2px",
+    },
+    linkedinUsername: {
+      marginRight: "10px",
+      fontSize: "1.3rem"
+    },
+    svgIcon: {
+      transform: "scale(1.3)"
+    }
   }),
   { index: 1 }
 );
@@ -885,6 +935,14 @@ export const useSearchPageStyles = makeStyles(
       display: "flex",
       alignItems: "flex-start",
     },
+    btnGrp: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
     noResults: {
       textAlign: "center",
       display: "flex",
@@ -906,6 +964,10 @@ export const useSearchPageStyles = makeStyles(
       marginTop: "0.8em",
       width: "50%",
     },
+    spanStyle: {
+      display: "block",
+      height: "1cm"
+    }
   }),
   { index: 1 }
 );

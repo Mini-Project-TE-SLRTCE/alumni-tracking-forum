@@ -5,10 +5,12 @@ const {
   updateUser,
   setUserAvatar,
   removeUserAvatar,
+  getSearchedUsers
 } = require('../controllers/user');
 
 const router = express.Router();
 
+router.get('/search', getSearchedUsers);
 router.get('/:username', getUser);
 router.put('/:id', auth, updateUser);
 router.post('/avatar', auth, setUserAvatar);

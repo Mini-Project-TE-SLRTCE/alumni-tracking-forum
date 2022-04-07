@@ -50,7 +50,7 @@ const NavBar = () => {
                   startIcon={<SchoolIcon fontSize="large" />}
                   size="large"
                 >
-                  Alumni Tracking System
+                  Alumni Community
                 </Button>
                 {/* <Typography variant="caption" color="secondary">
                   Made with <FavoriteIcon style={{ fontSize: 12 }} /> by

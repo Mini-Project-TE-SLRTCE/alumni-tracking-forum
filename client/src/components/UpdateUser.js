@@ -27,6 +27,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import EmailIcon from '@material-ui/icons/Email';
 import FaceIcon from '@material-ui/icons/Face';
 import CallIcon from '@material-ui/icons/Call';
+import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import LabelIcon from '@material-ui/icons/Label';
 import BookIcon from '@material-ui/icons/Book';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
@@ -54,6 +55,9 @@ const validationSchemaUpdate = yup.object({
     .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Invalid phone number")
     .required(),
   // TODO: fix phone validation
+  linkedinUsername: yup
+    .string()
+    .required(),
   role: yup
     .string()
     .required(),
@@ -107,6 +111,7 @@ const UpdateUser = ({ userDetails }) => {
             name: userDetails.name,
             email: userDetails.email,
             phoneNumber: userDetails.phoneNumber,
+            linkedinUsername: userDetails.linkedinUsername,
             role: userDetails.role,
             branch: userDetails.branch,
             batch: userDetails.batch,
@@ -160,6 +165,18 @@ const UpdateUser = ({ userDetails }) => {
                   type="tel"
                   placeholder="Enter phone number"
                   label="Phone number"
+                  fullWidth
+                  required
+                />
+              </div>
+
+              <div className={classes.input}>
+                <LinkedInIcon className={classes.inputIcon} color="primary" />
+                <TextInput
+                  name="linkedinUsername"
+                  type="text"
+                  placeholder="Enter LinkedIn username"
+                  label="LinkedIn username"
                   fullWidth
                   required
                 />

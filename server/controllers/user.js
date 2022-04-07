@@ -3,6 +3,7 @@ const User = require('../models/user');
 const Post = require('../models/post');
 const { cloudinary, UPLOAD_PRESET } = require('../utils/config');
 const paginateResults = require('../utils/paginateResults');
+const googleHandler = require('../scrapper/google-it');
 
 const getUser = async (req, res) => {
   const { username } = req.params;
@@ -45,6 +46,7 @@ const updateUser = async (req, res) => {
     name,
     email,
     phoneNumber,
+    linkedinUsername,
     role,
     branch,
     batch,
@@ -54,13 +56,13 @@ const updateUser = async (req, res) => {
   let detailsToUpdate;
 
   if (password === '') {
-    detailsToUpdate = { username, name, email, phoneNumber, role, branch, batch };
+    detailsToUpdate = { username, name, email, phoneNumber, linkedinUsername, role, branch, batch };
   }
   else {
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
-    detailsToUpdate = { username, name, email, phoneNumber, role, branch, batch, passwordHash };
+    detailsToUpdate = { username, name, email, phoneNumber, linkedinUsername, role, branch, batch, passwordHash };
   }
 
   const user = await User.update({ _id: id }, { $set: detailsToUpdate });
@@ -80,6 +82,7 @@ const updateUser = async (req, res) => {
       name: user.name,
       email: user.email,
       phoneNumber: user.phoneNumber,
+      linkedinUsername: user.linkedinUsername,
       role: user.role,
       branch: user.branch,
       batch: user.batch,
@@ -143,4 +146,81 @@ const removeUserAvatar = async (req, res) => {
   res.status(204).end();
 };
 
-module.exports = { getUser, updateUser, setUserAvatar, removeUserAvatar };
+const getSearchedUsers = async (req, res) => {
+  const page = Number(req.query.page);
+  const limit = Number(req.query.limit);
+  const query = req.query.query;
+
+  console.log(req.query);
+
+  const findQuery = {
+    name: {
+      $regex: query,
+      $options: 'i'
+    }
+  };
+
+  const usersCount = await User.find(findQuery).countDocuments();
+  const paginated = paginateResults(page, limit, usersCount);
+  const searchedUsers = await User.find(findQuery)
+    .sort({ hotAlgo: -1 })
+    .select('-comments')
+    .limit(limit)
+    .skip(paginated.startIndex)
+
+  const googleResults = await googleHandler(query);
+
+  const registeredLinkedinUsernames = [];
+
+  searchedUsers.map(data => {
+    console.log(data.linkedinUsername);
+    registeredLinkedinUsernames.push(data.linkedinUsername);
+  });
+
+  let modifiedGoogleResults = googleResults;
+
+  googleResults.map(data => {
+    let googleLinkedinUrl = data.link;
+    let googleLinkedinUsername = googleLinkedinUrl.slice(googleLinkedinUrl.lastIndexOf('/') + 1);
+
+    if (registeredLinkedinUsernames.includes(googleLinkedinUsername)) {
+      modifiedGoogleResults = modifiedGoogleResults.filter(obj => obj.link !== googleLinkedinUrl);
+    }
+  });
+
+  // temporary Google results
+  // modifiedGoogleResults = [
+  //   {
+  //     title: 'Laukik Paradhan - Engineer - Naik Environmental Engineers Pvt Ltd',
+  //     link: 'https://in.linkedin.com/in/laukik-paradhan-05491035',
+  //     snippet: 'Project Lead at GDSC SLRTCE, General Secretary & AI and Mechatronics Head at SLRTCE, Machine Learning ... Deepanshu Y. Member of Codeyantra Team at SLRTCE.'
+  //   },
+  //   {
+  //     title: 'Sachin Yadav - Mumbai, Maharashtra, India | Professional Profile',
+  //     link: 'https://in.linkedin.com/in/sachin-yadav-29339736',
+  //     snippet: 'Project Lead at GDSC SLRTCE, General Secretary & AI and Mechatronics Head at SLRTCE, Machine Learning Intern, 3⭐ star on Codechef.'
+  //   },
+  //   {
+  //     title: 'Laura West - Real Estate Investor - West Corporation | LinkedIn',
+  //     link: 'https://www.linkedin.com/in/laura-west-85b213140',
+  //     snippet: 'Assistant Professor at SLRTCE,MUMBAI. Mumbai · Tanmay Toraskar ... Deepanshu Vangani. SDE intern @Amazon. Mumbai · Shantanu Godbole.'
+  //   }
+  // ];
+
+  const paginatedUsers = {
+    previous: paginated.results.previous,
+    userResults: searchedUsers,
+    googleResults: modifiedGoogleResults,
+    next: paginated.results.next,
+  };
+
+  res.status(200).json(paginatedUsers);
+};
+
+module.exports = {
+  getUser,
+  updateUser,
+  setUserAvatar,
+  removeUserAvatar,
+  getSearchedUsers
+};

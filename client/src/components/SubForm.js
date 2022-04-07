@@ -31,7 +31,7 @@ const validationSchema = yup.object({
     .min(3, 'Must be at least 3 characters'),
 });
 
-const SubForm = () => {
+const SubForm = ({ closing }) => {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const classes = useSubredditFormStyles();
@@ -46,6 +46,7 @@ const SubForm = () => {
         notify(`New subreddish created: r/${values.subredditName}`, 'success')
       );
       history.push(`/r/${values.subredditName}`);
+      closing(false);
     } catch (err) {
       setSubmitting(false);
       dispatch(notify(getErrorMsg(err), 'error'));

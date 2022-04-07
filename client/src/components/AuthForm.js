@@ -27,6 +27,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import EmailIcon from '@material-ui/icons/Email';
 import FaceIcon from '@material-ui/icons/Face';
 import CallIcon from '@material-ui/icons/Call';
+import LinkedInIcon from '@material-ui/icons/LinkedIn';
 
 const validationSchemaSignup = yup.object({
   username: yup
@@ -52,7 +53,11 @@ const validationSchemaSignup = yup.object({
   phoneNumber: yup
     .string()
     .matches(/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/, "Invalid phone number")
-  // TODO: fix phone validation
+    // TODO: fix phone validation
+    .required('Required'),
+  linkedinUsername: yup
+    .string()
+    .required('Required'),
 });
 
 const validationSchemaLogin = yup.object({
@@ -124,7 +129,7 @@ const AuthForm = () => {
       <div className={classes.authWrapper}>
         <Formik
           validateOnChange={true}
-          initialValues={{ username: '', name: '', email: '', phoneNumber: '', password: '' }}
+          initialValues={{ username: '', name: '', email: '', phoneNumber: '', linkedinUsername: '', password: '' }}
           onSubmit={authType === 'login' ? handleLogin : authType === 'forgotPwd' ? handleForgotPwd : handleSignup}
           validationSchema={
             authType === 'login'
@@ -206,6 +211,22 @@ const AuthForm = () => {
                         type="tel"
                         placeholder="Enter phone number"
                         label="Phone number"
+                        required
+                        fullWidth
+                      />
+                    </div>
+                  ) : ''
+                }
+
+                {
+                  authType === 'signup' ? (
+                    <div className={classes.input}>
+                      <LinkedInIcon className={classes.inputIcon} color="primary" />
+                      <TextInput
+                        name="linkedinUsername"
+                        type="text"
+                        placeholder="Enter LinkedIn username"
+                        label="LinkedIn username"
                         required
                         fullWidth
                       />
