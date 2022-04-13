@@ -1,5 +1,6 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
+import Home from "./components/Home";
 import PostFormModal from "./components/PostFormModal";
 import PostList from "./components/PostList";
 import PostCommentsPage from "./components/PostCommentsPage";
@@ -19,7 +20,7 @@ const Routes = () => {
     <Switch>
       <Route exact path="/">
         <Container disableGutters className={classes.homepage}>
-          <h1>This is the homepage</h1>
+          <Home />
         </Container>
       </Route>
       <Route exact path="/forum">

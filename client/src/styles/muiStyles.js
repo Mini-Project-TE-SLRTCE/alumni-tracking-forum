@@ -80,6 +80,26 @@ export const useNavStyles = makeStyles(
   { index: 1 }
 );
 
+export const useHomePageStyles = makeStyles(
+  (theme) => ({
+    root: {
+      backgroundColor: '#fff',
+      position: 'fixed',
+      top: '64px',
+      left: '0',
+      right: '0',
+      bottom: '0',
+      width: '100vw',
+      height: 'calc(100vh - 64px)'
+    },
+    gif: {
+      width: 'auto',
+      height: 'calc(100vh - 64px)'
+    }
+  }),
+  { index: 1 }
+);
+
 export const useAuthStyles = (authType) =>
   makeStyles(
     (theme) => ({
