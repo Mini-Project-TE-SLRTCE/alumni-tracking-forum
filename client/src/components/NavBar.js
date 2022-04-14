@@ -52,17 +52,6 @@ const NavBar = () => {
                 >
                   Alumni Community
                 </Button>
-                {/* <Typography variant="caption" color="secondary">
-                  Made with <FavoriteIcon style={{ fontSize: 12 }} /> by
-                  <Link
-                    href={'https://github.com/amand33p'}
-                    color="inherit"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    <strong>{` amand33p`}</strong>
-                  </Link>
-                </Typography> */}
               </div>
               {!isMobile && <SearchBar />}
             </div>

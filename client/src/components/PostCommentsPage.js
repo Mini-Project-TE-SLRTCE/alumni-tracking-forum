@@ -133,6 +133,8 @@ const PostCommentsPage = () => {
   const formattedLink =
     postType === 'Link' && trimLink(prettifyLink(linkSubmission), 70);
 
+  document.title = `${title} - Post - Alumni Community`;
+
   return (
     <Container disableGutters>
       <Paper variant="outlined" className={classes.mainPaper}>
@@ -150,10 +152,10 @@ const PostCommentsPage = () => {
                 color: isUpvoted
                   ? '#FF8b60'
                   : isDownvoted
-                  ? '#9494FF'
-                  : darkMode
-                  ? '#e4e4e4'
-                  : '#333',
+                    ? '#9494FF'
+                    : darkMode
+                      ? '#e4e4e4'
+                      : '#333',
                 fontWeight: 600,
               }}
             >

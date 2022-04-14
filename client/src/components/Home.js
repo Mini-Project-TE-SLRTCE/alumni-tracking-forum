@@ -5,6 +5,8 @@ import AC from '../media/ac.gif';
 const Home = () => {
     const classes = useHomePageStyles();
 
+    document.title = 'Home - Alumni Community';
+
     return (
         <div className={classes.root}>
             <center>

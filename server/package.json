@@ -1,5 +1,5 @@
 {
-  "name": "reddish-amand33p",
+  "name": "alumni-community",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "build:ui": "rm -rf build && cd ../client && rm -rf build && npm run build --prod && cp -r build ../server"
   },
-  "author": "Amandeep S.",
+  "author": "Team Light",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

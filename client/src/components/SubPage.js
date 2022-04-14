@@ -159,6 +159,8 @@ const SubPage = () => {
     }
   };
 
+  document.title = `${subredditName} - Subreddit - Alumni Community`;
+
   return (
     <Container disableGutters>
       <Paper variant="outlined" className={classes.mainPaper}>

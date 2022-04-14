@@ -71,6 +71,8 @@ const SearchResults = () => {
     setValue(newValue);
   };
 
+  document.title = `${query} - Search Results - Alumni Community`;
+
   return (
     <Container disableGutters>
       <Paper variant="outlined" className={classes.mainPaper}>

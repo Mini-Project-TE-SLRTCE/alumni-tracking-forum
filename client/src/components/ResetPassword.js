@@ -53,6 +53,8 @@ const ResetPassword = () => {
     }
   };
 
+  document.title = 'Reset Password - Alumni Community';
+
   return (
     <div>
       <div

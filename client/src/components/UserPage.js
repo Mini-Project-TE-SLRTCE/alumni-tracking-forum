@@ -10,6 +10,7 @@ import ErrorPage from './ErrorPage';
 import LoadMoreButton from './LoadMoreButton';
 import LoadingSpinner from './LoadingSpinner';
 import getErrorMsg from '../utils/getErrorMsg';
+import storageService from '../utils/localStorage';
 import stringToColor from '../utils/stringtoColor';
 
 import {
@@ -107,20 +108,36 @@ const UserPage = () => {
     }
   };
 
+  let loggedUser = storageService.loadUser();
+
+  // if user is logged in
+  if (loggedUser !== null) {
+    // then whther he/she is viewing his/her profile
+    // or any other's profile
+    if (loggedUser.username !== userName) {
+      loggedUser = null;
+    }
+  }
+
+  document.title = `${name} - Profile - Alumni Community`;
+
   return (
     <Container disableGutters>
       <Paper elevation={0} className={classes.mainPaper}>
         <div className='p-cnt'>
-          <div className='p-edit-btn'>
-            <Button
-              variant="contained"
-              color="secondary"
-              style={{ textTransform: "initial" }}
-              onClick={() => setUpdateDialog(!updateDialog)}
-            >
-              Edit Profile
-            </Button>
-          </div>
+          {
+            loggedUser !== null &&
+            <div className='p-edit-btn'>
+              <Button
+                variant="contained"
+                color="secondary"
+                style={{ textTransform: "initial" }}
+                onClick={() => setUpdateDialog(!updateDialog)}
+              >
+                Edit Profile
+              </Button>
+            </div>
+          }
 
           <center>
             {avatar && avatar.exists ? (
