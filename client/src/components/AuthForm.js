@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { loginUser, signupUser, forgotPwd } from '../reducers/userReducer';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
-import "yup-phone";
 
 import { TextInput } from './FormikMuiFields';
 import { notify } from '../reducers/notificationReducer';
