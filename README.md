@@ -1,10 +1,8 @@
-# Reddish - A Reddit Clone - MERN
-
-[Reddit](https://www.reddit.com) clone (a social media site) made w/ MERN stack & Redux.
+# Alumni Community - A place to connect and get help from alumni.
 
 ## Demo
 
-[Deployed on Netlify (front-end) & Heroku (back-end)](https://reddish.netlify.app)
+[Deployed on Netlify (front-end) & Heroku (back-end)](https://alumni-community.netlify.app)
 
 ## Built using
 
